@@ -15,7 +15,7 @@ class GaussSeidel(IterativeMethod):
         if self.is_strictly_diagonally_dominant(self.a):
             raise Exception("Matrix not strictly diagonally dominant")
         self.p = tril(self.a).tocsr()
-        self.x0 = np.ones(self.n)
+        self.x0 = np.zeros(self.n)
 
     def update(self):
         self.x0 = self.x0 + self.forward_substitution(self.p)
