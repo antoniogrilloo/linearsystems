@@ -29,7 +29,6 @@ class IterativeMethod(ABC):
             k = k + 1
             if k > self.MAX_ITER:
                 raise Exception("Iterations exceeded")
-        print(k)
         return self.x0
 
     @abstractmethod
