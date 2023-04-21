@@ -12,7 +12,7 @@ class GaussSeidel(IterativeMethod):
         self.p = None
 
     def init_x(self):
-        if self.is_strictly_diagonally_dominant(self.a):
+        if not self.is_strictly_diagonally_dominant(self.a):
             raise Exception("Matrix not strictly diagonally dominant")
         self.p = tril(self.a).tocsr()
         self.x0 = np.zeros(self.n)
@@ -22,7 +22,5 @@ class GaussSeidel(IterativeMethod):
 
     def forward_substitution(self, l):
         x = np.zeros(self.n)
-        for i in range(self.n):
-            dot = l[i, ].dot(x)
-            x[i] = (self.r[i] - dot) / l[i, i]
+        x = (self.r - l.dot(x)) / l.diagonal()
         return x

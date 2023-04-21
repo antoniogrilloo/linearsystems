@@ -1,4 +1,5 @@
 #! /usr/bin/python3
+import math
 from abc import ABC, abstractmethod
 import numpy as np
 from scipy.linalg import blas
@@ -28,6 +29,7 @@ class IterativeMethod(ABC):
             k = k + 1
             if k > self.MAX_ITER:
                 raise Exception("Iterations exceeded")
+        print(k)
         return self.x0
 
     @abstractmethod
@@ -56,10 +58,11 @@ class IterativeMethod(ABC):
 
     @staticmethod
     def is_strictly_diagonally_dominant(a):
-        for i in range(a.shape[0]):
-            dv = abs(a[i, i])
-            add = np.absolute(a.getrow(i)).sum()
-            add -= dv
-            if dv <= add:
-                return False
+        a = abs(a)
+        d = a.diagonal()
+        s = a.sum(axis=1).transpose() - d
+        if (abs(d - s) / d < 1e-15).all():
+            d = s
+        if (d < s).all():
+            return False
         return True
