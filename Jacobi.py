@@ -11,6 +11,8 @@ class Jacobi(IterativeMethod):
         self.invP = None
 
     def init_x(self):
+        if self.is_strictly_diagonally_dominant(self.a):
+            raise Exception("Matrix not strictly diagonally dominant")
         self.x0 = np.zeros(self.n)
         self.invP = sparse.diags(np.reciprocal(self.a.diagonal())).tocsr()
 

@@ -53,3 +53,13 @@ class IterativeMethod(ABC):
         vals = data[:, 2]
         a = sparse.coo_matrix((vals, (rows, cols)), shape=(m, n)).tocsr()
         return a, m, n
+
+    @staticmethod
+    def is_strictly_diagonally_dominant(a):
+        for i in range(a.shape[0]):
+            dv = abs(a[i, i])
+            add = np.absolute(a.getrow(i)).sum()
+            add -= dv
+            if dv <= add:
+                return False
+        return True
