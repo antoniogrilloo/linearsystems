@@ -29,7 +29,7 @@ class IterativeMethod(ABC):
             k = k + 1
             if k > self.MAX_ITER:
                 raise Exception("Iterations exceeded")
-        return self.x0
+        return self.x0, k
 
     @abstractmethod
     def init_x(self):
@@ -53,6 +53,12 @@ class IterativeMethod(ABC):
         cols = data[:, 1] - 1
         vals = data[:, 2]
         a = sparse.coo_matrix((vals, (rows, cols)), shape=(m, n)).tocsr()
+        if not IterativeMethod.is_symmetric(a):
+            raise Exception("The matrix is not symmetric")
+        try:
+            IterativeMethod.cholesky(a)
+        except Exception:
+            print("The matrix is not positive definite")
         return a, m, n
 
     @staticmethod
@@ -65,3 +71,21 @@ class IterativeMethod(ABC):
         if (d < s).all():
             return False
         return True
+
+    @staticmethod
+    def cholesky(a):
+        np.seterr(all='raise')
+        a = a.todense()
+        n = np.shape(a)[0]
+        r = np.zeros((n, n))
+        for k in range(n):
+            r[k, k] = math.sqrt(a[k, k])
+            r[k, k+1:n] = a[k, k+1:n] / r[k, k]
+            rho = 1 / a[k, k]
+            a[k+1:n, k+1:n] -= rho * (a[k+1:n, k] @ a[k, k+1:n])
+        return r
+
+    @staticmethod
+    def is_symmetric(a):
+        at = a.transpose()
+        return np.array_equal(a.todense(), at.todense())
