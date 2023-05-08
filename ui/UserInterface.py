@@ -7,8 +7,8 @@ from tkinter.messagebox import showinfo
 import customtkinter
 import numpy as np
 
-from IterativeMethod import IterativeMethod
-from Validate import Validate
+from methods.IterativeMethod import IterativeMethod
+from methods.validation.Validate import Validate
 
 
 class UserInterface:
@@ -120,7 +120,7 @@ class UserInterface:
         x = np.ones(n)
         b = a @ x
         tmp = str(self.clicked.get())
-        err, it, tf = Validate.validate_method(tmp, a, b, tol, x)
+        err, it, tf = Validate.validate_method(tmp, a, b, x, tol)
         self.error.set(str(err))
         self.times.set(str("%.5f" % tf))
         self.iter.set(str(it))

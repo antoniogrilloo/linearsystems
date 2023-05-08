@@ -1,5 +1,4 @@
-import numpy as np
-from IterativeMethod import IterativeMethod
+from methods.IterativeMethod import IterativeMethod
 
 
 class ConjugateGradient(IterativeMethod):
@@ -9,7 +8,7 @@ class ConjugateGradient(IterativeMethod):
         self.d0 = None
 
     def init_x(self):
-        self.x0 = np.zeros(self.n)
+        super().init_x()
         self.d0 = self.r = self.b - (self.a @ self.x0)
 
     def update(self):

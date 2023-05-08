@@ -1,7 +1,7 @@
 #! /usr/bin/python3
 import numpy as np
 
-from IterativeMethod import IterativeMethod
+from methods.IterativeMethod import IterativeMethod
 from scipy.sparse import tril
 
 
@@ -12,11 +12,11 @@ class GaussSeidel(IterativeMethod):
         self.p = None
 
     def init_x(self):
+        super().init_x()
         if not self.is_strictly_diagonally_dominant(self.a):
             raise Exception("Matrix not strictly diagonally dominant")
         self.p = tril(self.a).tocsr()
-        self.x0 = np.zeros(self.n)
-
+        
     def update(self):
         self.x0 = self.x0 + self.forward_substitution(self.p)
 

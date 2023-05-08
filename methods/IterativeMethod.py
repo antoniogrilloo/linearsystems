@@ -31,9 +31,8 @@ class IterativeMethod(ABC):
                 raise Exception("Iterations exceeded")
         return self.x0, k
 
-    @abstractmethod
     def init_x(self):
-        raise NotImplementedError
+        self.x0 = np.zeros(self.n)
 
     def stopping_criterion(self):
         self.r = self.b - (self.a @ self.x0)

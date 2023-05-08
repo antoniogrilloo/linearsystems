@@ -1,6 +1,5 @@
 #! /bin/usr/python3
-from IterativeMethod import IterativeMethod
-import numpy as np
+from methods.IterativeMethod import IterativeMethod
 
 
 class Gradient(IterativeMethod):
@@ -9,7 +8,7 @@ class Gradient(IterativeMethod):
         super().__init__(a, b, tol)
 
     def init_x(self):
-        self.x0 = np.zeros(self.n)
+        super().init_x()
 
     def update(self):
         y = self.a @ self.r

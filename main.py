@@ -1,15 +1,23 @@
 #! /usr/src/python3
-from UserInterface import UserInterface
-from Validate import Validate
+from ui.UserInterface import UserInterface
+from methods.validation.Validate import Validate
 import sys
 
 
 def main(args):
-    if len(args) > 1 and args[1] == "gui":
+    length = len(args)
+    if length == 1:
+        Validate.test()
+        return
+    if args[1] == "--gui":
         x = UserInterface()
         x.startUI()
+    elif args[1] == "--matrix" and args[3] == "--tol":
+        filename = args[2]
+        tol = float(args[4])
+        Validate.test_filename(matrix_file=filename, tol=tol)
     else:
-        Validate.test()
+        print("Error parameters")
 
 
 if __name__ == '__main__':
