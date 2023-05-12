@@ -58,7 +58,17 @@ class UserInterface:
         frame2.pack(fill="both", expand=TRUE, pady=5, padx=100)
 
         customtkinter.CTkLabel(master=frame2, text="Method:").grid(row=1, column=1, sticky=W)
-        OptionMenu(frame2, self.clicked, *self.method_options).grid(row=1, column=2)
+        customtkinter.CTkOptionMenu(frame2, values = [
+            "Jacobi",
+            "GaussSeidel",
+            "Gradient",
+            "Conjugate"
+            ],
+            hover = False,
+            width = 85,
+            height = 22,
+            text_color = 'white',
+            fg_color = '#555555', variable=self.clicked).grid(row=1, column=2)
 
         customtkinter.CTkLabel(master=frame2, text="Matrix:").grid(row=2, column=1, sticky=W)
         self.open_button = customtkinter.CTkButton(
@@ -68,17 +78,29 @@ class UserInterface:
             width=85,
             height=10,
             text_color='white',
-            fg_color='#989898',
-            hover_color='azure4'
+            fg_color='#555555',
+            hover_color='#555555'
 
         )
+
         self.open_button.grid(row=2, column=2)
         customtkinter.CTkLabel(master=frame2, text="Tolerance:").grid(row=3, column=1, sticky=W)
-        OptionMenu(frame2, self.tolerance, *self.tolerance_options).grid(row=3, column=2)
+        customtkinter.CTkOptionMenu(frame2, values = [
+            "1e-4",
+            "1e-6",
+            "1e-8",
+            "1e-10",
+            ],
+            hover = False,
+            width=85,
+            height=22,
+            text_color='white',
+            fg_color='#555555', variable=self.tolerance).grid(row=3, column=2)
+
 
         frame3 = customtkinter.CTkFrame(master=frame)
         frame3.pack(pady=20, padx=50, fill="both", expand=TRUE)
-        customtkinter.CTkLabel(frame3, text="Time: ", font=("alibri", 14, "bold")).pack(pady=0, padx=10)
+        customtkinter.CTkLabel(frame3, text="Time: ", font=("calibri", 14, "bold")).pack(pady=0, padx=10)
         customtkinter.CTkLabel(frame3, textvariable=self.times).pack(pady=0, padx=10)
         customtkinter.CTkLabel(frame3, text="Iteration number: ", font=("calibri", 14, "bold")).pack(pady=0, padx=10)
         customtkinter.CTkLabel(frame3, textvariable=self.iter).pack(pady=0, padx=10)
@@ -120,7 +142,7 @@ class UserInterface:
         x = np.ones(n)
         b = a @ x
         tmp = str(self.clicked.get())
-        err, it, tf = Validate.validate_method(tmp, a, b, x, tol)
+        err, it, tf = Validate.validate_method(tmp, a, b, tol, x)
         self.error.set(str(err))
         self.times.set(str("%.5f" % tf))
         self.iter.set(str(it))
