@@ -1,5 +1,6 @@
 import os
 import tkinter
+from threading import Thread
 from tkinter import W, TRUE, FALSE
 from tkinter import filedialog as fd
 from tkinter.messagebox import showinfo
@@ -102,7 +103,9 @@ class UserInterface:
         customtkinter.CTkLabel(frame3, textvariable=self.iter).pack(pady=0, padx=10)
         customtkinter.CTkLabel(frame3, text="Relative Error: ", font=("calibri", 14, "bold")).pack(pady=0, padx=10)
         customtkinter.CTkLabel(frame3, textvariable=self.error).pack(pady=5, padx=10)
-        customtkinter.CTkButton(frame, text="Calculate", command=self.calculate, width=150).pack(pady=12, padx=10)
+        customtkinter.CTkButton(frame, text="Calculate", command=self.threading, width=150).pack(pady=12, padx=10)
+        self.progressbar = customtkinter.CTkProgressBar(frame, orientation="horizontal")
+        self.progressbar.configure(mode="indeterminate")
 
         self.root.resizable(False, False)
         self.root.mainloop()
@@ -124,6 +127,11 @@ class UserInterface:
         else:
             self.open_button.configure(text=head_tail[1])
 
+    def threading(self):
+        # Call work function
+        t1 = Thread(target=self.calculate)
+        t1.start()
+
     def calculate(self):
         filename = self.matrix.get()
         try:
@@ -138,16 +146,19 @@ class UserInterface:
         if tol == 0:
             tkinter.messagebox.showerror(title=None, message='Tolerance not selected!')
             return
+        self.error.set('Calculating...')
+        self.times.set('Calculating...')
+        self.iter.set('Calculating...')
+        self.progressbar.pack(pady=12, padx=10)
+        self.progressbar.start()
+        self.root.update_idletasks()
 
         try:
             a, n, _ = IterativeMethod.read_matrix(filename)
         except:
             tkinter.messagebox.showerror(title=None, message='Runtime error')
             return
-        self.error.set('Calculating...')
-        self.times.set('Calculating...')
-        self.iter.set('Calculating...')
-        self.root.update_idletasks()
+
         x = np.ones(n)
         b = a @ x
         tmp = str(self.clicked.get())
@@ -159,3 +170,6 @@ class UserInterface:
         self.error.set(str(err))
         self.times.set(str("%.5f" % tf))
         self.iter.set(str(it))
+        self.progressbar.stop()
+        self.progressbar.pack_forget()
+
