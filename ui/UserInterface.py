@@ -109,6 +109,7 @@ class UserInterface:
 
         self.root.resizable(False, False)
         self.root.mainloop()
+        self.last_filename = ''
 
     def select_file(self):
         filetypes = (
@@ -120,6 +121,13 @@ class UserInterface:
             title='Open a file',
             initialdir='.',
             filetypes=filetypes)
+
+        if filename != '':
+            self.last_filename = filename
+
+        if filename == '' and self.last_filename !='':
+            filename = self.last_filename
+
         self.matrix.set(filename)
         head_tail = os.path.split(filename)
         if head_tail[1] == '':
