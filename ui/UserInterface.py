@@ -49,6 +49,7 @@ class UserInterface:
         self.matrix = StringVar()
         self.file_chosen = StringVar()
         self.file_chosen.set('Chose File')
+        self.last_filename = ''
 
     def startUI(self):
         frame = customtkinter.CTkFrame(master=self.root)
@@ -109,7 +110,7 @@ class UserInterface:
 
         self.root.resizable(False, False)
         self.root.mainloop()
-        self.last_filename = ''
+
 
     def select_file(self):
         filetypes = (
@@ -164,6 +165,12 @@ class UserInterface:
         try:
             a, n, _ = IterativeMethod.read_matrix(filename)
         except:
+            self.error.set('')
+            self.times.set('')
+            self.iter.set('')
+            self.progressbar.stop()
+            self.progressbar.pack_forget()
+            self.root.update_idletasks()
             tkinter.messagebox.showerror(title=None, message='Runtime error')
             return
 
